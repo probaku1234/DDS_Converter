@@ -115,8 +115,13 @@ while True:
         print('output folder path: ' + output_folder_path)
     elif event == EventKey.Convert.value:
         print('Convert!')
-        convert_image_to_dds()
-        sg.popup('Done!')
+        if not image_folder_path:
+            sg.popup('No Image Folder Selected!')
+        elif not len(file_names):
+            sg.popup('No Image Files Found on Folder!')
+        else:
+            convert_image_to_dds()
+            sg.popup('Done!')
 
     elif event == EventKey.FILE_LIST:  # A file was chosen from the listbox
         try:
