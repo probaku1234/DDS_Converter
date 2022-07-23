@@ -82,7 +82,7 @@ layout = [
     ]
 ]
 
-window = sg.Window("Image Viewer", layout)
+window = sg.Window("Image Converter", layout)
 
 # Run the Event Loop
 while True:
