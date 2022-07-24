@@ -1,0 +1,71 @@
+# English translations for PROJECT.
+# Copyright (C) 2022 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-07-24 01:33-0400\n"
+"PO-Revision-Date: 2022-07-24 01:05-0400\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.3\n"
+
+#: main.py:85
+msgid "&About"
+msgstr ""
+
+#: main.py:85
+msgid "Github"
+msgstr ""
+
+#: main.py:85
+msgid "&Language"
+msgstr ""
+
+#: main.py:91
+msgid "Image Folder"
+msgstr ""
+
+#: main.py:96
+msgid "Output Folder"
+msgstr ""
+
+#: main.py:112
+msgid "Choose an image from list on left:"
+msgstr ""
+
+#: main.py:126
+msgid "Image Converter"
+msgstr ""
+
+#: main.py:172
+msgid "No Image Folder Selected!"
+msgstr ""
+
+#: main.py:174
+msgid "No Image Files Found on Folder!"
+msgstr ""
+
+#: main.py:177
+msgid "Done!"
+msgstr ""
+
+#: main.py:181
+msgid "Language changed to KO"
+msgstr ""
+
+#: main.py:186
+msgid "Language changed to EN"
+msgstr ""
+
+#~ msgid "Close::close"
+#~ msgstr ""
+
