@@ -30,7 +30,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/probaku1234/DDS_Converter">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.ico" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">DDS Converter</h3>
