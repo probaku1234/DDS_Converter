@@ -8,9 +8,8 @@ import base64
 import gettext
 import webbrowser
 import logging
+import sys
 
-
-# TODO: logging format
 
 def make_full_file_path_with_dds(image_file_name):
     filename_with_dds = os.path.splitext(image_file_name)[0] + '.dds'
@@ -21,7 +20,7 @@ def make_full_file_path_with_dds(image_file_name):
 
 
 def convert_to_bytes(file_or_bytes, resize=None):
-    '''
+    """
     Will convert into bytes and optionally resize an image that is a file or a base64 bytes object.
     Turns into  PNG format in the process so that can be displayed by tkinter
     :param file_or_bytes: either a string filename or a bytes base64 image object
@@ -30,15 +29,15 @@ def convert_to_bytes(file_or_bytes, resize=None):
     :type resize: (Tuple[int, int] or None)
     :return: (bytes) a byte-string object
     :rtype: (bytes)
-    '''
+    """
     if isinstance(file_or_bytes, str):
         img = PIL.Image.open(file_or_bytes)
     else:
         try:
             img = PIL.Image.open(io.BytesIO(base64.b64decode(file_or_bytes)))
         except Exception as e:
-            dataBytesIO = io.BytesIO(file_or_bytes)
-            img = PIL.Image.open(dataBytesIO)
+            data_bytes_io = io.BytesIO(file_or_bytes)
+            img = PIL.Image.open(data_bytes_io)
 
     cur_width, cur_height = img.size
     if resize:
@@ -54,9 +53,11 @@ def convert_to_bytes(file_or_bytes, resize=None):
 def convert_image_to_dds():
     i = 0
     for image_file_name in file_names:
+        logging.debug('Converting ' + image_file_name)
         file_full_path = os.path.join(image_folder_path, image_file_name)
         output_full_path = make_full_file_path_with_dds(image_file_name)
-        print(output_full_path)
+        logging.debug('Converting ' + image_file_name + " :: file full path: " + file_full_path)
+        logging.debug('Converting ' + image_file_name + " :: output full path: " + output_full_path)
 
         try:
             with image.Image(filename=fr'${file_full_path}') as img:
@@ -90,8 +91,12 @@ output_folder_path = ''
 image_folder_path = ''
 logging_path = os.path.join(os.path.expanduser('~'), 'Documents', 'DDS Converter')
 file_names = []
+
+# set up logging
 setup_log_dir()
-logging.basicConfig(filename=os.path.join(logging_path, 'log.txt'), level=logging.DEBUG)
+logging.basicConfig(filename=os.path.join(logging_path, 'log.txt'),
+                    level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s:%(message)s')
 
 
 def main_window(my_window=None):
@@ -150,7 +155,7 @@ try:
 except Exception as e:
     print(e)
     logging.error(e)
-
+    sys.exit(-1)
 
 window = main_window()
 logging.info('Window initialized')
@@ -180,19 +185,23 @@ while True:
         file_names = fnames
         print('image folder path: ' + image_folder_path)
         print('file names: ' + file_names.__str__())
+        logging.debug('file names: ' + file_names.__str__())
+        logging.debug('image folder path: ' + image_folder_path)
     # Output folder was chosen, store path
     elif event == EventKey.OUTPUT_FOLDER_CHOSEN:
         output_folder_path = values[EventKey.OUTPUT_FOLDER_CHOSEN]
         print('output folder path: ' + output_folder_path)
+        logging.debug('output folder path: ' + output_folder_path)
     elif event == EventKey.Convert.value:
-        print('Convert!')
         if not image_folder_path:
             sg.popup(_('No Image Folder Selected!'))
         elif not len(file_names):
             sg.popup(_('No Image Files Found on Folder!'))
         else:
+            logging.info('Converting started')
             convert_image_to_dds()
             sg.popup(_('Done!'))
+            logging.info('Converting finished')
     elif event == 'ko':
         translate = gettext.translation('messages', localedir=localedir, languages=['ko'])
         _ = translate.gettext
@@ -204,7 +213,6 @@ while True:
         print(_("Language changed to EN"))
         window = main_window(window)
     elif event == 'Github':
-        print('github')
         webbrowser.open('https://github.com/probaku1234/DDS_Converter')
     elif event == EventKey.FILE_LIST:  # A file was chosen from the listbox
         try:
