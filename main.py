@@ -5,8 +5,13 @@ from enum import Enum
 import PIL.Image
 import io
 import base64
+import gettext
+import webbrowser
+import logging
 
-
+# TODO: create log file directory
+# TODO: logging format
+# TODO:
 def make_full_file_path_with_dds(image_file_name):
     filename_with_dds = os.path.splitext(image_file_name)[0] + '.dds'
     if output_folder_path:
@@ -63,6 +68,7 @@ def convert_image_to_dds():
                                            orientation='h',
                                            bar_color=('#F47264', '#FFFFFF'))
         except Exception as e:
+            logging.error(e)
             sg.popup_error_with_traceback(f'An error happened', e)
 
 
@@ -78,45 +84,69 @@ class EventKey(Enum):
 output_folder_path = ''
 image_folder_path = ''
 file_names = []
+logging.basicConfig(filename=os.path.join(os.path.expanduser('~'), 'Documents', 'log.txt'), level=logging.DEBUG)
 
-file_list_column = [
-    [
-        sg.Text("Image Folder"),
-        sg.In(size=(25, 1), enable_events=True, key=EventKey.IMAGE_FOLDER_CHOSEN),
-        sg.FolderBrowse(),
-    ],
-    [
-        sg.Text("Output Folder"),
-        sg.In(size=(25, 1), enable_events=True, key=EventKey.OUTPUT_FOLDER_CHOSEN),
-        sg.FolderBrowse(),
-    ],
-    [
-        sg.Listbox(
-            values=[], enable_events=True, size=(40, 20), key=EventKey.FILE_LIST
-        )
-    ],
-    [
-        sg.Button(button_text=EventKey.Convert.value)
+
+def main_window(my_window=None):
+    menu_def = [_('&About'), ['Github']], [_('&Language'), ['&ko', 'en']],
+    file_list_column = [
+        [
+            sg.Menu(menu_def, pad=(10, 10))
+        ],
+        [
+            sg.Text(_("Image Folder")),
+            sg.In(size=(25, 1), enable_events=True, key=EventKey.IMAGE_FOLDER_CHOSEN),
+            sg.FolderBrowse(),
+        ],
+        [
+            sg.Text(_("Output Folder")),
+            sg.In(size=(25, 1), enable_events=True, key=EventKey.OUTPUT_FOLDER_CHOSEN),
+            sg.FolderBrowse(),
+        ],
+        [
+            sg.Listbox(
+                values=[], enable_events=True, size=(40, 20), key=EventKey.FILE_LIST
+            )
+        ],
+        [
+            sg.Button(button_text=EventKey.Convert.value)
+        ]
     ]
-]
 
-# For now will only show the name of the file that was chosen
-image_viewer_column = [
-    [sg.Text("Choose an image from list on left:")],
-    [sg.Text(size=(40, 1), key="-TOUT-")],
-    [sg.Image(key=EventKey.IMAGE_SHOW)],
-]
-
-# ----- Full layout -----
-layout = [
-    [
-        sg.Column(file_list_column),
-        sg.VSeperator(),
-        sg.Column(image_viewer_column),
+    # For now will only show the name of the file that was chosen
+    image_viewer_column = [
+        [sg.Text(_("Choose an image from list on left:"))],
+        [sg.Text(size=(40, 1), key="-TOUT-")],
+        [sg.Image(key=EventKey.IMAGE_SHOW)],
     ]
-]
 
-window = sg.Window("Image Converter", layout, icon='images/logo.ico')
+    # ----- Full layout -----
+    layout = [
+        [
+            sg.Column(file_list_column),
+            sg.VSeperator(),
+            sg.Column(image_viewer_column),
+        ]
+    ]
+
+    new_window = sg.Window(_("Image Converter"), layout, icon='images/logo.ico')
+
+    if my_window is not None:
+        my_window.close()
+    return new_window
+
+
+try:
+    localedir = 'locale'
+    translate = gettext.translation('messages', localedir=localedir, languages=['ko'])
+    _ = translate.gettext
+except Exception as e:
+    print(e)
+    logging.error(e)
+
+
+window = main_window()
+logging.info('Window initialized')
 
 # Run the Event Loop
 while True:
@@ -136,7 +166,6 @@ while True:
             f
             for f in file_list
             if os.path.isfile(os.path.join(folder, f))
-            # TODO: add more extensions
             and f.lower().endswith((".png", ".tga", ".jpg", "jpeg"))
         ]
         window[EventKey.FILE_LIST].update(fnames)
@@ -151,13 +180,25 @@ while True:
     elif event == EventKey.Convert.value:
         print('Convert!')
         if not image_folder_path:
-            sg.popup('No Image Folder Selected!')
+            sg.popup(_('No Image Folder Selected!'))
         elif not len(file_names):
-            sg.popup('No Image Files Found on Folder!')
+            sg.popup(_('No Image Files Found on Folder!'))
         else:
             convert_image_to_dds()
-            sg.popup('Done!')
-
+            sg.popup(_('Done!'))
+    elif event == 'ko':
+        translate = gettext.translation('messages', localedir=localedir, languages=['ko'])
+        _ = translate.gettext
+        print(_("Language changed to KO"))
+        window = main_window(window)
+    elif event == 'en':
+        translate = gettext.translation('messages', localedir=localedir, languages=['en'])
+        _ = translate.gettext
+        print(_("Language changed to EN"))
+        window = main_window(window)
+    elif event == 'Github':
+        print('github')
+        webbrowser.open('https://github.com/probaku1234/DDS_Converter')
     elif event == EventKey.FILE_LIST:  # A file was chosen from the listbox
         try:
             filename = os.path.join(
@@ -167,6 +208,7 @@ while True:
             window[EventKey.IMAGE_SHOW].update(data=convert_to_bytes(filename))
 
         except Exception as e:
+            logging.error(e)
             sg.popup_error_with_traceback(f'An error happened', e)
 
 window.close()
