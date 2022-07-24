@@ -96,7 +96,7 @@ file_names = []
 setup_log_dir()
 logging.basicConfig(filename=os.path.join(logging_path, 'log.txt'),
                     level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s:%(message)s')
+                    format='%(asctime)s %(levelname)s:: %(message)s')
 
 
 def main_window(my_window=None):
@@ -215,16 +215,17 @@ while True:
     elif event == 'Github':
         webbrowser.open('https://github.com/probaku1234/DDS_Converter')
     elif event == EventKey.FILE_LIST:  # A file was chosen from the listbox
-        try:
-            filename = os.path.join(
-                values[EventKey.IMAGE_FOLDER_CHOSEN], values[EventKey.FILE_LIST][0]
-            )
-            window["-TOUT-"].update(filename)
-            window[EventKey.IMAGE_SHOW].update(data=convert_to_bytes(filename))
+        if len(file_names):
+            try:
+                filename = os.path.join(
+                    values[EventKey.IMAGE_FOLDER_CHOSEN], values[EventKey.FILE_LIST][0]
+                )
+                window["-TOUT-"].update(filename)
+                window[EventKey.IMAGE_SHOW].update(data=convert_to_bytes(filename))
 
-        except Exception as e:
-            logging.error(e)
-            sg.popup_error_with_traceback(f'An error happened', e)
+            except Exception as e:
+                logging.error(e)
+                sg.popup_error_with_traceback(f'An error happened', e)
 
 window.close()
 
