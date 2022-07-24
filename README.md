@@ -146,7 +146,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 [issues-shield]: https://img.shields.io/github/issues/probaku1234/DDS_Converter.svg?style=for-the-badge
 [issues-url]: https://github.com/probaku1234/DDS_Converter/issues
 [license-shield]: https://img.shields.io/github/license/probaku1234/DDS_Converter.svg?style=for-the-badge
-[license-url]: https://github.com/probaku1234/DDS_Converter/blob/master/LICENSE.txt
+[license-url]: https://github.com/probaku1234/DDS_Converter/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
