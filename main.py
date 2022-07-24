@@ -2,6 +2,9 @@ import PySimpleGUI as sg
 import os.path
 from wand import image
 from enum import Enum
+import PIL.Image
+import io
+import base64
 
 
 def make_full_file_path_with_dds(image_file_name):
@@ -10,6 +13,37 @@ def make_full_file_path_with_dds(image_file_name):
         return os.path.join(output_folder_path, filename_with_dds)
     else:
         return os.path.join(image_folder_path, filename_with_dds)
+
+
+def convert_to_bytes(file_or_bytes, resize=None):
+    '''
+    Will convert into bytes and optionally resize an image that is a file or a base64 bytes object.
+    Turns into  PNG format in the process so that can be displayed by tkinter
+    :param file_or_bytes: either a string filename or a bytes base64 image object
+    :type file_or_bytes:  (Union[str, bytes])
+    :param resize:  optional new size
+    :type resize: (Tuple[int, int] or None)
+    :return: (bytes) a byte-string object
+    :rtype: (bytes)
+    '''
+    if isinstance(file_or_bytes, str):
+        img = PIL.Image.open(file_or_bytes)
+    else:
+        try:
+            img = PIL.Image.open(io.BytesIO(base64.b64decode(file_or_bytes)))
+        except Exception as e:
+            dataBytesIO = io.BytesIO(file_or_bytes)
+            img = PIL.Image.open(dataBytesIO)
+
+    cur_width, cur_height = img.size
+    if resize:
+        new_width, new_height = resize
+        scale = min(new_height/cur_height, new_width/cur_width)
+        img = img.resize((int(cur_width*scale), int(cur_height*scale)), PIL.Image.ANTIALIAS)
+    with io.BytesIO() as bio:
+        img.save(bio, format="PNG")
+        del img
+        return bio.getvalue()
 
 
 def convert_image_to_dds():
@@ -103,7 +137,7 @@ while True:
             for f in file_list
             if os.path.isfile(os.path.join(folder, f))
             # TODO: add more extensions
-            and f.lower().endswith((".png", ".gif"))
+            and f.lower().endswith((".png", ".tga", ".jpg", "jpeg"))
         ]
         window[EventKey.FILE_LIST].update(fnames)
         image_folder_path = folder
@@ -130,7 +164,7 @@ while True:
                 values[EventKey.IMAGE_FOLDER_CHOSEN], values[EventKey.FILE_LIST][0]
             )
             window["-TOUT-"].update(filename)
-            window[EventKey.IMAGE_SHOW].update(filename=filename)
+            window[EventKey.IMAGE_SHOW].update(data=convert_to_bytes(filename))
 
         except Exception as e:
             sg.popup_error_with_traceback(f'An error happened', e)
