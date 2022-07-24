@@ -9,9 +9,9 @@ import gettext
 import webbrowser
 import logging
 
-# TODO: create log file directory
+
 # TODO: logging format
-# TODO:
+
 def make_full_file_path_with_dds(image_file_name):
     filename_with_dds = os.path.splitext(image_file_name)[0] + '.dds'
     if output_folder_path:
@@ -72,6 +72,11 @@ def convert_image_to_dds():
             sg.popup_error_with_traceback(f'An error happened', e)
 
 
+def setup_log_dir():
+    if not os.path.isdir(logging_path):
+        os.makedirs(logging_path)
+
+
 class EventKey(Enum):
     IMAGE_FOLDER_CHOSEN = '-IMAGE FOLDER-'
     OUTPUT_FOLDER_CHOSEN = '-OUTPUT FOLDER-'
@@ -83,8 +88,10 @@ class EventKey(Enum):
 
 output_folder_path = ''
 image_folder_path = ''
+logging_path = os.path.join(os.path.expanduser('~'), 'Documents', 'DDS Converter')
 file_names = []
-logging.basicConfig(filename=os.path.join(os.path.expanduser('~'), 'Documents', 'log.txt'), level=logging.DEBUG)
+setup_log_dir()
+logging.basicConfig(filename=os.path.join(logging_path, 'log.txt'), level=logging.DEBUG)
 
 
 def main_window(my_window=None):
