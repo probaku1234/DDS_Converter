@@ -82,7 +82,7 @@ layout = [
     ]
 ]
 
-window = sg.Window("Image Converter", layout)
+window = sg.Window("Image Converter", layout, icon='images/logo.ico')
 
 # Run the Event Loop
 while True:
@@ -102,6 +102,7 @@ while True:
             f
             for f in file_list
             if os.path.isfile(os.path.join(folder, f))
+            # TODO: add more extensions
             and f.lower().endswith((".png", ".gif"))
         ]
         window[EventKey.FILE_LIST].update(fnames)
