@@ -60,7 +60,7 @@ def convert_image_to_dds():
         logging.debug('Converting ' + image_file_name + " :: output full path: " + output_full_path)
 
         try:
-            with image.Image(filename=fr'${file_full_path}') as img:
+            with image.Image(filename=fr'{file_full_path}') as img:
                 img.compression = 'dxt5'
                 img.save(filename=output_full_path)
                 i = i + 1
@@ -69,8 +69,8 @@ def convert_image_to_dds():
                                            orientation='h',
                                            bar_color=('#F47264', '#FFFFFF'))
         except Exception as e:
-            logging.error(e)
-            sg.popup_error_with_traceback(f'An error happened', e)
+            logging.error(e.with_traceback(sys.exc_info()[2]))
+            sg.popup_error_with_traceback(f'An error happened', e.with_traceback(sys.exc_info()[2]))
 
 
 def setup_log_dir():
@@ -94,7 +94,7 @@ file_names = []
 
 # set up logging
 setup_log_dir()
-logging.basicConfig(filename=os.path.join(logging_path, 'log.txt'),
+logging.basicConfig(filename=os.path.join(logging_path, 'log.log'),
                     level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s:: %(message)s')
 
