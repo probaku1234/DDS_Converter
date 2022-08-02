@@ -10,6 +10,8 @@ import webbrowser
 import logging
 import sys
 
+SUPPORT_IMAGE_TYPE = (".png", ".tga")
+
 
 def make_full_file_path_with_dds(image_file_name):
     filename_with_dds = os.path.splitext(image_file_name)[0] + '.dds'
@@ -71,6 +73,20 @@ def convert_image_to_dds():
         except Exception as e:
             logging.error(e.with_traceback(sys.exc_info()[2]))
             sg.popup_error_with_traceback(f'An error happened', e.with_traceback(sys.exc_info()[2]))
+
+
+def get_list_file_names_recursive(target_folder, arr, relative_path=''):
+    full_path = os.path.join(target_folder, relative_path)
+    files_list = os.listdir(full_path)
+
+    for f in files_list:
+        if os.path.isfile(os.path.join(full_path, f)):
+            if f.lower().endswith(SUPPORT_IMAGE_TYPE):
+                arr.append(os.path.join(relative_path, f))
+        else:
+            get_list_file_names_recursive(target_folder, arr, os.path.join(relative_path, f))
+
+    return arr
 
 
 def setup_log_dir():
@@ -174,15 +190,11 @@ while True:
         except:
             file_list = []
 
-        fnames = [
-            f
-            for f in file_list
-            if os.path.isfile(os.path.join(folder, f))
-            and f.lower().endswith((".png", ".tga"))
-        ]
+        fnames = get_list_file_names_recursive(folder, [])
         window[EventKey.FILE_LIST].update(fnames)
         image_folder_path = folder
         file_names = fnames
+
         print('image folder path: ' + image_folder_path)
         print('file names: ' + file_names.__str__())
         logging.debug('file names: ' + file_names.__str__())
