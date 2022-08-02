@@ -111,6 +111,8 @@ Wand library requires [MagickWand library](https://imagemagick.org/script/downlo
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+**It only supports _tga_ and _png_**
+
 1. Click the 'Browse' button
 <img width="551" alt="1" src="https://user-images.githubusercontent.com/10219906/180623671-bb84d57b-d918-4bf4-941a-11cdeb528dc2.PNG">
 2. Choose the folder with image files
@@ -132,6 +134,7 @@ Wand library requires [MagickWand library](https://imagemagick.org/script/downlo
 - [X] Add supporting other format of image files for viewing (right now it only supports gif, PNG)
 - [X] Multi-language Support
     - [X] Korean
+- [ ] Recursively list files 
 
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
