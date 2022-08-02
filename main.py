@@ -178,7 +178,7 @@ while True:
             f
             for f in file_list
             if os.path.isfile(os.path.join(folder, f))
-            and f.lower().endswith((".png", ".tga", ".jpg", "jpeg"))
+            and f.lower().endswith((".png", ".tga"))
         ]
         window[EventKey.FILE_LIST].update(fnames)
         image_folder_path = folder
