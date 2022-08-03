@@ -134,7 +134,7 @@ Wand library requires [MagickWand library](https://imagemagick.org/script/downlo
 - [X] Add supporting other format of image files for viewing (right now it only supports gif, PNG)
 - [X] Multi-language Support
     - [X] Korean
-- [ ] Recursively list files 
+- [X] Recursively list files 
 
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
